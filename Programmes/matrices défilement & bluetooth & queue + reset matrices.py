@@ -3,6 +3,7 @@ import time
 import max7219
 from machine import Pin, SPI
 from bluetooth import BLE
+import machine
 
 # =========================
 # MATRICES
@@ -27,8 +28,15 @@ TOTAL_WIDTH = 96
 # =========================
 # FILE D’ATTENTE ET TEXTE COURANT
 # =========================
-queue = []             # nouveaux messages en attente
-current_text = "READY" # dernier texte affiché
+queue = []
+current_text = "READY"
+
+# =========================
+# VARIABLES BLE (NOUVEAU)
+# =========================
+rx_buffer = ""
+rx_last_time = 0
+RX_TIMEOUT_MS = 300   # délai max entre chunks BLE
 
 # =========================
 # BLE UART
@@ -61,22 +69,31 @@ class BLE_UART:
         self.start_advertising()
 
     def irq(self, event, data):
-        global queue
+        global rx_buffer, rx_last_time, queue
+
         if event == 1:  # CONNECT
             conn_handle, _, _ = data
             self.connections.add(conn_handle)
 
         elif event == 2:  # DISCONNECT
             conn_handle, _, _ = data
-            self.connections.remove(conn_handle)
+            self.connections.discard(conn_handle)
             self.start_advertising()
 
         elif event == 3:  # WRITE
             value = self.ble.gatts_read(self.rx_handle)
             try:
-                new_text = value.decode().strip()
-                print("Texte reçu :", new_text)
-                queue.append(new_text)  # ajoute à la file
+                chunk = value.decode()
+                rx_buffer += chunk
+                rx_last_time = time.ticks_ms()
+
+                # Fin explicite si \n reçu
+                if "\n" in rx_buffer:
+                    full_text = rx_buffer.replace("\n", "").strip()
+                    print("Texte complet reçu :", full_text)
+                    queue.append(full_text)
+                    rx_buffer = ""
+
             except:
                 pass
 
@@ -85,25 +102,51 @@ class BLE_UART:
         self.ble.gap_advertise(100_000, adv)
 
 uart = BLE_UART()
-
+ranger = "Pensez a ranger le materiel et a nettoyer les tables avant de partir"
 # =========================
-# BOUCLE PRINCIPALE – SCROLL INFINI
+# BOUCLE PRINCIPALE – SCROLL
 # =========================
 while True:
+
+    # --- TIMEOUT BLE (NOUVEAU) ---
+    if rx_buffer and time.ticks_diff(time.ticks_ms(), rx_last_time) > RX_TIMEOUT_MS:
+        full_text = rx_buffer.strip()
+        print("Texte reçu (timeout) :", full_text)
+        
+        # Textes pré-définis
+        if full_text == "!RANGER":
+            full_text = ranger
+        
+        if full_text == "!RESET":
+            machine.reset()
+
+        if full_text == "!HELP":
+            full_text = "Help at https://github.com/mathisDeronne/Matrice-led-ynov"
+        
+        
+        
+        
+        queue.append(full_text)
+        rx_buffer = ""
+
     # --- Réinstanciation des matrices ---
     d1 = max7219.Matrix8x8(spi, cs_gauche, 4)
     d2 = max7219.Matrix8x8(spi, cs_milieu, 4)
     d3 = max7219.Matrix8x8(spi, cs_droite, 4)
-    # Si des messages en attente → on les prend
+
+    for d in (d1, d2, d3):
+        d.brightness(5)
+
+    # Nouveau message ?
     if queue:
         current_text = queue.pop(0)
 
     text_width = len(current_text) * 8
+
     for x in range(TOTAL_WIDTH, -text_width - 1, -1):
 
-        # Affiche le texte sur les 3 barrettes
         d1.fill(0)
-        d1.text(current_text, x - 0, 0, 1)
+        d1.text(current_text, x, 0, 1)
         d1.show()
 
         d2.fill(0)
@@ -116,4 +159,4 @@ while True:
 
         time.sleep(0.05)
 
-    # Quand le texte a fini → si queue vide, il sera de nouveau affiché
+
