@@ -91,17 +91,24 @@ Le BLE limite les envois à 20 caractères. Utilisez des messages prédéfinis d
 
 ```
 08/01/2026
-La programmation est terminée. La modélisation 3D progresse avec la création du boîtier pour l'ESP et la batterie. Des améliorations électroniques sont prévues : ajout d'un interrupteur marche/arrêt et remplacement de la breadboard par des barrettes de zinc.
+La programmation est terminée. 
+La modélisation 3D progresse avec la création du boîtier pour l'ESP et la batterie. 
+Des améliorations électroniques sont prévues : 
+ajout d'un interrupteur marche/arrêt et remplacement de la breadboard par des barrettes de zinc.
 ```
 
 ```
 13/01/2026
-Les phrases prédéfinies ont été intégrées au code. Les signaux s'affaiblissaient avec les jumpers, les câbles ont été conservés. La modélisation 3D du boîtier d'alimentation est en cours.
+Les phrases prédéfinies ont été intégrées au code. 
+Les signaux s'affaiblissaient avec les jumpers, les câbles ont été conservés. 
+La modélisation 3D du boîtier d'alimentation est en cours.
 ```
 
 ```
 04/02/2026
-Le projet est terminé. Le câblage est finalisé et optimisé. La batterie et le régulateur sont fixés avec du ruban adhésif double face.
+Le projet est terminé. 
+Le câblage est finalisé et optimisé. 
+La batterie et le régulateur sont fixés avec du ruban adhésif double face.
 ```
 
 ## Axes d'amélioration
