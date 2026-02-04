@@ -5,7 +5,7 @@ Ce projet a été créé et est utilisé au sein de Bordeaux Ynov Campus.
 
 ![image](/images/front.jpeg)
 
-Il utilise une ESP32 WROOM-32, trois barrettes de quatre matrices LED "MAX7219" soudées ensemble, et une batterie 5V.
+Il utilise une ESP32 WROOM-32, trois barrettes de quatre matrices LED "MAX7219" soudées ensemble, et une batterie composée de 4 cellules 18650.
 
 En utilisant le module Bluetooth de l'ESP32, il est possible d'envoyer un message depuis un téléphone qui s'affichera en défilement sur la matrice LED et se répétera jusqu'à la réception d'un nouveau message.
 
