@@ -50,7 +50,7 @@ Le système comporte de nombreux câbles et composants. Un support pour l'ESP a 
 
 ![image](/images/back2.jpeg)
 
-Un support pour la batterie a été conçu, mais l'espace disponible était insuffisant. La batterie est maintenue avec du ruban adhésif double face dans le boîtier arrière, qui intègre également un port de recharge, un interrupteur marche/arrêt et un régulateur de tension.
+Un support pour la batterie a été conçu, mais l'espace disponible était insuffisant. La batterie est donc maintenue avec du ruban adhésif double face dans le boîtier arrière, qui intègre également un port de recharge, un interrupteur marche/arrêt et un régulateur de tension.
 
 ![image](/images/coque.jpeg)
 
